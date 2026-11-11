@@ -27,6 +27,7 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++17
 QMAKE_LFLAGS += -std=c++17
+INCLUDEPATH += third_party/cppjieba/include
 
 !win32 {
     QMAKE_CXXFLAGS += -Werror
@@ -70,6 +71,7 @@ SOURCES += \
     src/downloadmanagement.cpp \
     src/findinpagebar.cpp \
     src/flowlayout.cpp \
+    src/jiebasegmenter.cpp \
     src/kiwixchoicebox.cpp \
     src/kiwixmessagebox.cpp \
     src/kiwixlineedit.cpp \
@@ -128,6 +130,7 @@ HEADERS += \
     src/kiwixchoicebox.h \
     src/kiwixmessagebox.h \
     src/kiwixlineedit.h \
+    src/jiebasegmenter.h \
     src/kiwixlistwidget.h \
     src/kiwixloader.h \
     src/node.h \

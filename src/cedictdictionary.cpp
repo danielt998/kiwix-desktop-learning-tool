@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QRegularExpression>
 
+#include <algorithm>
+
 namespace
 {
 
@@ -13,15 +15,38 @@ const QRegularExpression chineseWord(
 
 }
 
-QStringList CedictDictionary::lookup(const QString& word)
+QStringList CedictDictionary::lookup(const QString& text, int cursorOffset,
+                                     QString* matchedWord)
 {
-    if (!chineseWord.match(word).hasMatch())
+    if (!chineseWord.match(text).hasMatch())
         return {};
 
     if (!m_loaded)
         load();
 
-    return m_entries.value(word);
+    if (cursorOffset < 0 || cursorOffset >= text.size()) {
+        if (matchedWord)
+            *matchedWord = text;
+        return m_entries.value(text);
+    }
+
+    const auto textLength = static_cast<int>(text.size());
+    const auto maximumLength = std::min(m_longestWordLength, textLength);
+    for (int length = maximumLength; length > 0; --length) {
+        const auto firstStart = std::max(0, cursorOffset - length + 1);
+        const auto lastStart = std::min(cursorOffset, textLength - length);
+        for (int start = firstStart; start <= lastStart; ++start) {
+            const auto word = text.mid(start, length);
+            const auto entries = m_entries.value(word);
+            if (!entries.isEmpty()) {
+                if (matchedWord)
+                    *matchedWord = word;
+                return entries;
+            }
+        }
+    }
+
+    return {};
 }
 
 void CedictDictionary::load()
@@ -44,7 +69,11 @@ void CedictDictionary::load()
         const auto entry = QString("%1 [%2]\n%3")
             .arg(match.captured(1), match.captured(3), match.captured(4));
         m_entries[match.captured(1)].append(entry);
+        m_longestWordLength = std::max(m_longestWordLength,
+                                       static_cast<int>(match.captured(1).size()));
         if (match.captured(1) != match.captured(2))
             m_entries[match.captured(2)].append(entry);
+        m_longestWordLength = std::max(m_longestWordLength,
+                                       static_cast<int>(match.captured(2).size()));
     }
 }

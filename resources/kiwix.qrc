@@ -69,5 +69,10 @@
         <file>icons/stop-circle.svg</file>
         <file>icons/drop-down.svg</file>
         <file>dictionaries/cc-cedict.txt</file>
+        <file>dictionaries/cppjieba/jieba.dict.utf8</file>
+        <file>dictionaries/cppjieba/hmm_model.utf8</file>
+        <file>dictionaries/cppjieba/user.dict.utf8</file>
+        <file>dictionaries/cppjieba/idf.utf8</file>
+        <file>dictionaries/cppjieba/stop_words.utf8</file>
     </qresource>
 </RCC>

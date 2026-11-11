@@ -111,7 +111,7 @@ WebView::WebView(QWidget *parent)
     const auto tabbar = KiwixApp::instance()->getTabWidget();
     connect(tabbar, &TabBar::currentTitleChanged, this, &WebView::onCurrentTitleChanged);
     connect(kiwixChannelObj, &KiwixWebChannelObject::headersChanged, this, &WebView::onHeadersReceived);
-    connect(kiwixChannelObj, &KiwixWebChannelObject::selectionChanged,
+    connect(kiwixChannelObj, &KiwixWebChannelObject::dictionaryLookupRequested,
             this, &WebView::showDictionaryEntry);
 
     const auto tocbar = KiwixApp::instance()->getMainWindow()->getTableOfContentBar();
@@ -321,9 +321,10 @@ void WebView::contextMenuEvent(QContextMenuEvent *event)
     menu->exec(event->globalPos());
 }
 
-void WebView::showDictionaryEntry(const QString& text, int x, int y)
+void WebView::showDictionaryEntry(const QString& text, int x, int y, int cursorOffset)
 {
-    const auto entries = m_dictionary.lookup(text);
+    QString matchedWord;
+    const auto entries = m_dictionary.lookup(text, cursorOffset, &matchedWord);
     if (entries.isEmpty()) {
         if (m_dictionaryTipVisible) {
             QToolTip::hideText();
@@ -340,7 +341,7 @@ void WebView::showDictionaryEntry(const QString& text, int x, int y)
         "<div style='background-color: #FFF8D6; border: 2px solid #3366CC; "
         "padding: 12px; min-width: 420px; font-size: 16pt;'>"
         "<b>Dictionary: %1</b><br><br>%2</div>")
-        .arg(text.toHtmlEscaped(), escapedEntries.join("<hr>"));
+        .arg(matchedWord.toHtmlEscaped(), escapedEntries.join("<hr>"));
     const auto position = mapToGlobal(QPoint(x, y));
     QToolTip::showText(position, tooltip, this);
     m_dictionaryTipVisible = true;

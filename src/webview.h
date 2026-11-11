@@ -74,7 +74,7 @@ private slots:
     void onCurrentTitleChanged();
     void onHeadersReceived(const QString& headersJSONStr);
     void onNavigationRequested(const QString& url, const QString& anchor);
-    void showDictionaryEntry(const QString& text, int x, int y);
+    void showDictionaryEntry(const QString& text, int x, int y, int cursorOffset);
 
 private:
     void addHistoryItemAction(QMenu *menu, const QWebEngineHistoryItem &item, int n) const;

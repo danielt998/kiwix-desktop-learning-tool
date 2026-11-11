@@ -7,6 +7,7 @@
 #include <QWheelEvent>
 #include <QJsonObject>
 
+#include "cedictdictionary.h"
 #include "findinpagebar.h"
 
 class QWebEngineHistoryItem;
@@ -73,6 +74,7 @@ private slots:
     void onCurrentTitleChanged();
     void onHeadersReceived(const QString& headersJSONStr);
     void onNavigationRequested(const QString& url, const QString& anchor);
+    void showDictionaryEntry(const QString& text, int x, int y);
 
 private:
     void addHistoryItemAction(QMenu *menu, const QWebEngineHistoryItem &item, int n) const;
@@ -80,6 +82,8 @@ private:
     QMenu* createStandardContextMenu();
     QMenu* createLinkContextMenu();
     QJsonObject m_headers;
+    CedictDictionary m_dictionary;
+    bool m_dictionaryTipVisible = false;
 };
 
 #endif // WEBVIEW_H

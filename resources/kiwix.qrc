@@ -68,5 +68,6 @@
         <file>icons/caret-left-solid.svg</file>
         <file>icons/stop-circle.svg</file>
         <file>icons/drop-down.svg</file>
+        <file>dictionaries/cc-cedict.txt</file>
     </qresource>
 </RCC>
